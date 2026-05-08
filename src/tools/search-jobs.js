@@ -1,7 +1,6 @@
 import logger from '../logger.js';
 import { searchParams } from '../schemas/searchParamsSchema.js';
 import { execSync } from 'node:child_process';
-import { z } from 'zod';
 import changeCase from 'change-case-object';
 
 /**
@@ -30,10 +29,12 @@ import changeCase from 'change-case-object';
  */
 
 export const searchJobsTool = (server, sseManager) =>
-  server.tool(
+  server.registerTool(
     'search_jobs',
-    'Search for jobs across various job listing websites',
-    searchParams,
+    {
+      description: 'Search for jobs across various job listing websites',
+      inputSchema: searchParams,
+    },
     async (params, extra) => {
       let progressInterval;
       try {
@@ -167,7 +168,7 @@ export function searchJobsHandler(params) {
 
     logger.info('Cleaned parameters', { cleanedParams });
 
-    const validatedParams = z.object(searchParams).parse(cleanedParams);
+    const validatedParams = searchParams.parse(cleanedParams);
 
     logger.info('Validated parameters', { validatedParams });
 

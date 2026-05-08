@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const searchParams = {
+export const searchParams = z.object({
   siteNames: z
     .union([
       z
@@ -176,4 +176,4 @@ export const searchParams = {
     .int()
     .describe('Timeout in milliseconds for the job search process')
     .default(120000),
-};
+});
