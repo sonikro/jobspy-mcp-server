@@ -13,23 +13,18 @@ A Model Context Protocol (MCP) server that enables AI assistants like Claude to 
 ## Prerequisites
 
 - Node.js 16+
-- Python 3.6+
-- The JobSpy tool installed and available
+- Docker (to build and run the JobSpy Python image)
 
 ## Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/borgius/jobspy-mcp-server.git
+# Install Node.js dependencies
 cd jobspy-mcp-server
-
-# Install dependencies
 npm install
 
-# Make sure the JobSpy tool is properly set up
-cd ../jobSpy
-pip install -r requirements.txt
-chmod +x run.sh
+# Build the JobSpy Docker image
+cd jobspy
+docker build -t jobspy .
 ```
 
 ## Configuration
@@ -238,3 +233,27 @@ curl -X POST "http://localhost:9423/api" \
 ## License
 
 MIT
+
+---
+
+## Job Seeker Skill (GitHub Copilot)
+
+This repository includes a [Job Seeker skill](../.github/skills/job-seeker/SKILL.md) for GitHub Copilot that enables AI-assisted job searching based on your resume.
+
+### What it does
+
+When you ask Copilot to find job openings, the skill will:
+
+1. **Read your resume** — extracts target roles, key skills, work mode preference, preferred location, and seniority level.
+2. **Search for jobs** — calls this MCP server's `search_jobs` tool with parameters derived from your resume. Always targets Brazil (`country_indeed: "Brazil"`).
+3. **Present ranked results** — analyzes and ranks each result (High / Medium / Low match) showing title, company, location, job board, match rationale, and URL.
+4. **Offer next steps** — offers to refine the search or tailor a cover letter for a specific position.
+
+### How to use
+
+Make sure the MCP server is running locally (see [Installation](#installation) above), then simply ask Copilot:
+
+> "Find me software engineer jobs in São Paulo"
+> "Search for remote DevOps openings in Brazil"
+
+The skill is automatically invoked when job-seeking intent is detected.
